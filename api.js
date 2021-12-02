@@ -6,18 +6,16 @@ export const week_api = async (api_url, key, numOfRows) => {
   const dateStringYesterday =
     "" +
     dateYesterday.getFullYear() +
-    (dateYesterday.getMonth() + 1) +
-    dateYesterday.getDate();
-  console.log(dateStringYesterday);
+    ("0" + (dateYesterday.getMonth() + 1)).slice(-2) +
+    ("0" + dateYesterday.getDate()).slice(-2);
 
   //6일전의 날짜
   const date6dayBefore = new Date(Date.now() - 3600 * 24 * 6 * 1000);
   const dataString6dayBefore =
     "" +
     date6dayBefore.getFullYear() +
-    (date6dayBefore.getMonth() + 1) +
-    date6dayBefore.getDate();
-  console.log(dataString6dayBefore);
+    ("0" + (date6dayBefore.getMonth() + 1)).slice(-2) +
+    ("0" + date6dayBefore.getDate()).slice(-2);
 
   const url = api_url; /*URL*/
   let queryParams =
@@ -36,12 +34,12 @@ export const week_api = async (api_url, key, numOfRows) => {
     "&" +
     encodeURIComponent("startDt") +
     "=" +
-    encodeURIComponent("dataString6dayBefore");
+    encodeURIComponent(dataString6dayBefore);
   queryParams +=
     "&" +
     encodeURIComponent("endDt") +
     "=" +
-    encodeURIComponent("dateStringYesterday");
+    encodeURIComponent(dateStringYesterday);
   queryParams +=
     "&" + encodeURIComponent("stnIds") + "=" + encodeURIComponent("108");
   const {
@@ -53,6 +51,7 @@ export const week_api = async (api_url, key, numOfRows) => {
       },
     },
   } = await axios.get(url + queryParams);
+  console.log(weekWeather_item);
 
   const converted = weekWeather_item.map((v) => ({
     date: v.tm, //날짜
@@ -69,9 +68,8 @@ export const weather_api = async (api_url, key, numOfRows) => {
   const dateStringToDay =
     "" +
     dateToDay.getFullYear() +
-    (dateToDay.getMonth() + 1) +
-    dateToDay.getDate();
-  console.log(dateStringToDay);
+    ("0" + (dateToDay.getMonth() + 1)).slice(-2) +
+    ("0" + dateToDay.getDate()).slice(-2);
 
   const tem_url = api_url; /*URL*/
   let tem_queryParams =
@@ -92,7 +90,7 @@ export const weather_api = async (api_url, key, numOfRows) => {
     "&" +
     encodeURIComponent("base_date") +
     "=" +
-    encodeURIComponent("dateStringToDay"); /**/
+    encodeURIComponent(dateStringToDay); /**/
   tem_queryParams +=
     "&" +
     encodeURIComponent("base_time") +
@@ -111,6 +109,8 @@ export const weather_api = async (api_url, key, numOfRows) => {
       },
     },
   } = await axios.get(tem_url + tem_queryParams);
+
+  console.log(temp_item);
 
   const weather = temp_item.map((v) => ({
     baseDate: v.baseDate, //날짜
@@ -133,18 +133,15 @@ export const good_api = async (
   const dateStringToDay2 =
     "" +
     dateToDay2.getFullYear() +
-    -+(dateToDay2.getMonth() + 1) +
-    -+dateToDay2.getDate();
+    "-" +
+    ("0" + (dateToDay2.getMonth() + 1)).slice(-2) +
+    "-" +
+    ("0" + dateToDay2.getDate()).slice(-2);
   console.log(dateStringToDay2);
 
   const conditions_url = api_url; /*URL*/
   let conditions_queryParams =
     "?" + encodeURIComponent("serviceKey") + "=" + key; /*Service Key*/
-  conditions_queryParams +=
-    "&" +
-    encodeURIComponent("serviceKey") +
-    "=" +
-    encodeURIComponent("인증키(URL Encode)"); /**/
   conditions_queryParams +=
     "&" + encodeURIComponent("pageNo") + "=" + encodeURIComponent("1"); /**/
   conditions_queryParams +=
@@ -171,7 +168,7 @@ export const good_api = async (
     "&" +
     encodeURIComponent("saleDate") +
     "=" +
-    encodeURIComponent("dateStringToDay2"); /**/
+    encodeURIComponent(dateStringToDay2); /**/
   conditions_queryParams +=
     "&" +
     encodeURIComponent("resultType") +
@@ -182,7 +179,7 @@ export const good_api = async (
       getByMarketCostTrendinfo: { item: conditions_items },
     },
   } = await axios.get(conditions_url + conditions_queryParams);
-  s;
+  console.log(conditions_items);
   const conditions = conditions_items.map((v) => ({
     cost: parseFloat(v.aveCost), //평균 가격
     saleDate: v.saleDate, //판매 날짜

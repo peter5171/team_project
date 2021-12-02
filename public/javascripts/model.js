@@ -1,3 +1,6 @@
+const dfd = require("danfojs-node");
+const tf = require("@tensorflow/tfjs-node");
+
 const result = fetch("/")
   .then(function (response) {
     return response.json();
@@ -51,8 +54,8 @@ const data = [
   //df_enc.print();
 
   const tensorData = df_enc.tensor.reshape([-1, 30, 3]);
+  // tensorData.print();
   tensorData.print();
-  //tensorData.print();
   const predict = await model.executeAsync(tensorData);
 
   const predArray = await predict.array();
